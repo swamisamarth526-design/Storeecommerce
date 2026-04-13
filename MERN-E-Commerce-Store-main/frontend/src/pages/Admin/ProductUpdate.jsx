@@ -59,13 +59,13 @@ const AdminProductUpdate = () => {
     formData.append("image", e.target.files[0]);
     try {
       const res = await uploadProductImage(formData).unwrap();
-      toast.success("Item added successfully", {
+      toast.success("Image uploaded successfully", {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 2000,
       });
       setImage(res.image);
     } catch (err) {
-      toast.success("Item added successfully", {
+      toast.error(err?.data?.message || err.error || "Image upload failed", {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 2000,
       });
@@ -151,7 +151,11 @@ const AdminProductUpdate = () => {
 
             <div className="mb-3">
               <label className="text-white  py-2 px-4 block w-full text-center rounded-lg cursor-pointer font-bold py-11">
-                {image ? image.name : "Upload image"}
+                {image
+                  ? typeof image === "string"
+                    ? "Image selected"
+                    : image.name
+                  : "Upload image"}
                 <input
                   type="file"
                   name="image"
@@ -231,10 +235,11 @@ const AdminProductUpdate = () => {
                 <div>
                   <label htmlFor="">Category</label> <br />
                   <select
-                    placeholder="Choose Category"
+                    value={category}
                     className="p-4 mb-3 w-[30rem] border rounded-lg bg-[#101011] text-white mr-[5rem]"
                     onChange={(e) => setCategory(e.target.value)}
                   >
+                    <option value="">Choose Category</option>
                     {categories?.map((c) => (
                       <option key={c._id} value={c._id}>
                         {c.name}

@@ -109,7 +109,7 @@ const ProductDetails = () => {
                   </h1>
                   <h1 className="flex items-center mb-6 w-[20rem]">
                     <FaClock className="mr-2 text-white" /> Added:{" "}
-                    {moment(product.createAt).fromNow()}
+                    {moment(product.createdAt).fromNow()}
                   </h1>
                   <h1 className="flex items-center mb-6">
                     <FaStar className="mr-2 text-white" /> Reviews:{" "}
@@ -119,7 +119,7 @@ const ProductDetails = () => {
 
                 <div className="two">
                   <h1 className="flex items-center mb-6">
-                    <FaStar className="mr-2 text-white" /> Ratings: {rating}
+                    <FaStar className="mr-2 text-white" /> Ratings: {product.rating}
                   </h1>
                   <h1 className="flex items-center mb-6">
                     <FaShoppingCart className="mr-2 text-white" /> Quantity:{" "}

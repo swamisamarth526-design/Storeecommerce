@@ -62,7 +62,7 @@ const ProductList = () => {
       setImage(res.image);
       setImageUrl(res.image);
     } catch (error) {
-      toast.error(error?.data?.message || error.error);
+      toast.error(error?.data?.message || error.error || "Image upload failed");
     }
   };
 
@@ -85,14 +85,18 @@ const ProductList = () => {
 
           <div className="mb-3">
             <label className="border text-white px-4 block w-full text-center rounded-lg cursor-pointer font-bold py-11">
-              {image ? image.name : "Upload Image"}
+              {image
+                ? typeof image === "string"
+                  ? "Image selected"
+                  : image.name
+                : "Upload Image"}
 
               <input
                 type="file"
                 name="image"
                 accept="image/*"
                 onChange={uploadFileHandler}
-                className={!image ? "hidden" : "text-white"}
+                className="text-white"
               />
             </label>
           </div>
@@ -163,10 +167,11 @@ const ProductList = () => {
               <div>
                 <label htmlFor="">Category</label> <br />
                 <select
-                  placeholder="Choose Category"
+                  value={category}
                   className="p-4 mb-3 w-[30rem] border rounded-lg bg-[#101011] text-white"
                   onChange={(e) => setCategory(e.target.value)}
                 >
+                  <option value="">Choose Category</option>
                   {categories?.map((c) => (
                     <option key={c._id} value={c._id}>
                       {c.name}

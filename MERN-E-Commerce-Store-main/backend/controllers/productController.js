@@ -4,6 +4,8 @@ import Product from "../models/productModel.js";
 const addProduct = asyncHandler(async (req, res) => {
   try {
     const { name, description, price, category, quantity, brand } = req.fields;
+    const image =
+      req.files?.image?.path || req.fields.image || req.fields.imageUrl;
 
     // Validation
     switch (true) {
@@ -19,9 +21,14 @@ const addProduct = asyncHandler(async (req, res) => {
         return res.json({ error: "Category is required" });
       case !quantity:
         return res.json({ error: "Quantity is required" });
+      case !image:
+        return res.json({ error: "Image is required" });
     }
 
-    const product = new Product({ ...req.fields });
+    const product = new Product({
+      ...req.fields,
+      image: image.startsWith("/") ? image : `/${image}`,
+    });
     await product.save();
     res.json(product);
   } catch (error) {
@@ -33,6 +40,8 @@ const addProduct = asyncHandler(async (req, res) => {
 const updateProductDetails = asyncHandler(async (req, res) => {
   try {
     const { name, description, price, category, quantity, brand } = req.fields;
+    const image =
+      req.files?.image?.path || req.fields.image || req.fields.imageUrl;
 
     // Validation
     switch (true) {
@@ -50,11 +59,17 @@ const updateProductDetails = asyncHandler(async (req, res) => {
         return res.json({ error: "Quantity is required" });
     }
 
-    const product = await Product.findByIdAndUpdate(
-      req.params.id,
-      { ...req.fields },
-      { new: true }
-    );
+    const updateData = {
+      ...req.fields,
+    };
+
+    if (image) {
+      updateData.image = image.startsWith("/") ? image : `/${image}`;
+    }
+
+    const product = await Product.findByIdAndUpdate(req.params.id, updateData, {
+      new: true,
+    });
 
     await product.save();
 
